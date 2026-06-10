@@ -1,4 +1,5 @@
 # 重点车辆智管云平台 Demo
+https://chocof123.github.io/heavy-load-truck-safety-dashboard-clean/
 
 展示重点车辆 / 重载货车安全管理驾驶舱的前端实现方式。项目保留了可运行代码、演示数据、地图数据和数据转换脚本，剔除了设计草稿、提示词、个人临时文件、本地依赖缓存等补充材料。
 
