@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Theme tokens
+   沉浸 (immersive, default) = dark navy cockpit
+   明亮 (bright) = forest-green light theme  (.theme-bright)
+   ============================================================ */
+:root {
+  color-scheme: dark;
+  --accent-rgb: 62 231 255; /* cyan */
+  --ink-rgb: 232 241 255; /* primary text (near white) */
+  --panel-rgb: 10 23 38; /* inset dark surface */
+  --bg-base: #070b14;
+  --grid-rgb: 120 200 255;
+  --grid-alpha: 0.035;
+  --glow-a: rgba(20, 130, 160, 0.22);
+  --glow-b: rgba(96, 92, 246, 0.14);
+  --card-from: rgba(18, 32, 52, 0.72);
+  --card-to: rgba(10, 18, 32, 0.82);
+  --card-border: rgba(96, 190, 245, 0.18);
+  --card-inset: rgba(140, 215, 255, 0.06);
+  --label-color: #6fb6d8;
+  --title-color: #bfe9ff;
+  --tooltip-bg: rgba(8, 16, 28, 0.92);
+  --title-grad-a: #ffffff;
+  --title-grad-b: #3ee7ff;
+}
+
+/* 明亮 — forest theme anchored on #16610E:
+   GREEN page background, WHITE cards, near-black ink, #16610E green accent. */
+.theme-bright {
+  color-scheme: light;
+  --accent-rgb: 22 97 14; /* #16610E — deep green accent (titles, icons, scores) */
+  --ink-rgb: 26 34 22; /* near-black ink on white cards */
+  --panel-rgb: 228 238 221; /* light green inset surface on white cards */
+  --bg-base: #7a9c70; /* muted, low-saturation sage-green page background */
+  --grid-rgb: 245 250 240;
+  --grid-alpha: 0.06;
+  --glow-a: rgba(180, 215, 150, 0.16);
+  --glow-b: rgba(120, 160, 100, 0.12);
+  --card-from: rgba(255, 255, 255, 0.98); /* white card */
+  --card-to: rgba(244, 249, 241, 0.99);
+  --card-border: rgba(22, 97, 14, 0.42); /* clearer green rim on white cards */
+  --card-inset: rgba(22, 97, 14, 0.05);
+  --label-color: #3c7048; /* medium green label, readable on white */
+  --title-color: #16610e; /* deep green section titles */
+  --tooltip-bg: rgba(255, 255, 255, 0.97);
+  --title-grad-a: #16610e;
+  --title-grad-b: #2e8b3a;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg-base);
+  color: rgb(var(--ink-rgb));
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- App background: themed base + tech grid + radial glows ---- */
+.app-bg {
+  position: relative;
+  background-color: var(--bg-base);
+  background-image:
+    linear-gradient(rgb(var(--grid-rgb) / var(--grid-alpha)) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--grid-rgb) / var(--grid-alpha)) 1px, transparent 1px),
+    radial-gradient(circle at 78% 8%, var(--glow-a), transparent 32%),
+    radial-gradient(circle at 12% 92%, var(--glow-b), transparent 36%);
+  background-size: 46px 46px, 46px 46px, auto, auto;
+  animation: gridpan 26s linear infinite;
+  transition: background-color 0.4s ease;
+}
+
+@keyframes gridpan {
+  0% {
+    background-position: 0 0, 0 0, 0 0, 0 0;
+  }
+  100% {
+    background-position: 46px 46px, 46px 46px, 0 0, 0 0;
+  }
+}
+
+/* ---- Glass card ---- */
+.glass-card {
+  position: relative;
+  border-radius: 16px;
+  background: linear-gradient(160deg, var(--card-from) 0%, var(--card-to) 100%);
+  border: 1px solid var(--card-border);
+  box-shadow:
+    0 0 0 1px rgba(8, 16, 28, 0.18),
+    0 8px 28px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 var(--card-inset);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(
+    140deg,
+    rgb(var(--accent-rgb) / 0.5),
+    rgb(var(--accent-rgb) / 0) 38%,
+    rgb(var(--accent-rgb) / 0) 70%,
+    rgb(var(--accent-rgb) / 0.35)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.card-title {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: var(--title-color);
+  text-transform: none;
+}
+
+.neon-label {
+  color: var(--label-color);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+.neon-value {
+  color: rgb(var(--ink-rgb));
+  font-weight: 600;
+}
+
+.text-accent {
+  color: rgb(var(--accent-rgb));
+}
+
+/* scrollbars */
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgb(var(--accent-rgb) / 0.28);
+  border-radius: 999px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* upward data-flow along connector lines */
+@keyframes flowUp {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+.flow-line {
+  animation: flowUp 1.6s linear infinite;
+}
+
+/* vertical auto-scroll (台账滚动) — content is duplicated x2, so -50% loops seamlessly */
+@keyframes scrollUpY {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+.marquee-track {
+  animation: scrollUpY linear infinite;
+  will-change: transform;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* login button — cyan neon, glows on hover */
+.login-btn {
+  background: linear-gradient(95deg, #3ee7ff, #5ad1ff 55%, #8a7bff);
+  box-shadow: 0 0 0 1px rgba(62, 231, 255, 0.4), 0 6px 18px rgba(62, 231, 255, 0.25);
+}
+.login-btn:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 0 22px rgba(62, 231, 255, 0.6), 0 6px 22px rgba(62, 231, 255, 0.4);
+  transform: translateY(-1px);
+}
+.login-btn:active {
+  transform: translateY(0);
+}
+
+/* recharts tooltip — themed */
+.recharts-default-tooltip {
+  background: var(--tooltip-bg) !important;
+  border: 1px solid rgb(var(--accent-rgb) / 0.35) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 0 18px rgb(var(--accent-rgb) / 0.2) !important;
+  color: rgb(var(--ink-rgb)) !important;
+}
+.recharts-tooltip-item {
+  color: rgb(var(--ink-rgb)) !important;
+}
